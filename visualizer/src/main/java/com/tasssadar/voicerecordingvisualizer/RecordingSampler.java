@@ -140,9 +140,11 @@ public class RecordingSampler {
                     mAudioRecord.stop();
                     return;
                 }
-                mAudioRecord.read(buf, 0, mBufSize);
+                final int read = mAudioRecord.read(buf, 0, mBufSize);
+                if(read <= 0)
+                    return;
 
-                int decibel = calculateDecibel(buf);
+                int decibel = calculateDecibel(buf, read);
                 if (mVisualizerViews != null && !mVisualizerViews.isEmpty()) {
                     for (int i = 0; i < mVisualizerViews.size(); i++) {
                         mVisualizerViews.get(i).receive(decibel);
@@ -157,13 +159,17 @@ public class RecordingSampler {
         }, 0, mSamplingInterval);
     }
 
-    private int calculateDecibel(byte[] buf) {
+    private int calculateDecibel(byte[] buf, int len) {
         int sum = 0;
-        for (int i = 0; i < mBufSize; i++) {
-            sum += Math.abs(buf[i]);
+        for (int i = 0; i < len/2; ++i) {
+            int val = (int)buf[i*2];
+            val |= (int)buf[i*2+1] << 8;
+            sum += Math.abs(val);
         }
-        // avg 10-50
-        return sum / mBufSize;
+        if(sum == 0) {
+            return 0;
+        }
+        return 100 + (int) (20 * Math.log10(((float)(sum / len)) / 32767));
     }
 
     /**

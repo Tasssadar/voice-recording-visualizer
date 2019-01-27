@@ -19,6 +19,9 @@ android {
     }
 }
 
+dependencies {
+    implementation 'com.android.support:appcompat-v7:22.2.0+'
+}
 
 apply plugin: 'com.github.dcendents.android-maven'
 group='com.github.Tasssadar'

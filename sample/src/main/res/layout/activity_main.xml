@@ -43,7 +43,7 @@
                 app:numColumns="100"
                 app:renderColor="@color/renderColor3"
                 app:renderRange="both"
-                app:renderType="pixel" />
+                app:renderType="bar" />
 
     </LinearLayout>
 

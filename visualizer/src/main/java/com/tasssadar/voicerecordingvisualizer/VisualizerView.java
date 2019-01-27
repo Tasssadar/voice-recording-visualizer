@@ -30,8 +30,10 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.util.CircularArray;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
+
 
 /**
  * A class that draws visualizations of data received from {@link RecordingSampler}
@@ -61,11 +63,17 @@ public class VisualizerView extends FrameLayout {
     private float mColumnWidth;
     private float mSpace;
 
+    private CircularArray<Integer> mValues;
+    private int mMaxValue;
+
     public VisualizerView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
         mPaint.setColor(mRenderColor);
         mFadePaint.setColor(Color.argb(138, 255, 255, 255));
+
+        mValues = new CircularArray<>(mNumColumns);
+        mMaxValue = 90;
     }
 
     private void init(Context context, AttributeSet attrs) {
@@ -106,7 +114,7 @@ public class VisualizerView extends FrameLayout {
         }
 
         mColumnWidth = (float) getWidth() / (float) mNumColumns;
-        mSpace = mColumnWidth / 8f;
+        mSpace = Math.max(1, mColumnWidth / 8f);
 
         if (mBaseY == 0) {
             mBaseY = getHeight() / 2;
@@ -138,8 +146,15 @@ public class VisualizerView extends FrameLayout {
                     mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                 }
 
+                if(mValues.size() >= mNumColumns) {
+                    mValues.popFirst();
+                }
+                mValues.addLast(volume);
+
+                mCanvas.drawLine(0, getHeight()/2, getWidth(), getHeight()/2, mPaint);
+
                 if ((mType & Type.BAR.getFlag()) != 0) {
-                    drawBar(volume);
+                    drawBar();
                 }
                 if ((mType & Type.PIXEL.getFlag()) != 0) {
                     drawPixel(volume);
@@ -149,13 +164,16 @@ public class VisualizerView extends FrameLayout {
         });
     }
 
-    private void drawBar(int volume) {
-        for (int i = 0; i < mNumColumns; i++) {
-            float height = getRandomHeight(volume);
-            float left = i * mColumnWidth + mSpace;
-            float right = (i + 1) * mColumnWidth - mSpace;
+    private void drawBar() {
+        int start = mNumColumns - mValues.size();
+        for (int i = start; i < mNumColumns; i++) {
+            final int volume = mValues.get(i - start);
+            final float pct = ((float)volume) / ((float)mMaxValue);
 
-            RectF rect = createRectF(left, right, height);
+            float left = (i * mColumnWidth + mSpace);
+            float right = ((i + 1) * mColumnWidth - mSpace);
+
+            RectF rect = createRectF(left, right, getBarHeight(pct));
             mCanvas.drawRect(rect, mPaint);
         }
     }
@@ -220,6 +238,22 @@ public class VisualizerView extends FrameLayout {
                 break;
         }
         return (height / 60f) * (float) randomVolume;
+    }
+
+    private float getBarHeight(float rangePct) {
+        float height = getHeight();
+        switch (mRenderRange) {
+            case RENDAR_RANGE_TOP:
+                height = mBaseY * rangePct;
+                break;
+            case RENDAR_RANGE_BOTTOM:
+                height = (getHeight() - mBaseY) * rangePct;
+                break;
+            case RENDAR_RANGE_TOP_BOTTOM:
+                height = getHeight() * rangePct;
+                break;
+        }
+        return height / 2;
     }
 
     private RectF createRectF(float left, float right, float height) {
