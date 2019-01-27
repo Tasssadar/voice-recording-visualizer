@@ -1,8 +1,8 @@
-package com.tyorikan.voicerecordingvisualizer.sample;
+package com.tasssadar.voicerecordingvisualizer.sample;
 
 
-import com.tyorikan.voicerecordingvisualizer.RecordingSampler;
-import com.tyorikan.voicerecordingvisualizer.VisualizerView;
+import com.tasssadar.voicerecordingvisualizer.RecordingSampler;
+import com.tasssadar.voicerecordingvisualizer.VisualizerView;
 
 import android.os.Build;
 import android.os.Bundle;

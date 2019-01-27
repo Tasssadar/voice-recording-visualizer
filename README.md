@@ -1,3 +1,4 @@
+# THIS IS FORK OF https://github.com/tyorikan/voice-recording-visualizer
 
 # Voice Recording Visualizer
 
@@ -38,7 +39,7 @@ Simple Visualizer from mic input for Android.
 
 ## VisualizerView
 ```
-<com.tyorikan.voicerecordingvisualizer.VisualizerView
+<com.tasssadar.voicerecordingvisualizer.VisualizerView
                 android:id="@+id/visualizer"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
@@ -60,7 +61,7 @@ Simple Visualizer from mic input for Android.
 [![IMAGE demo](http://img.youtube.com/vi/fJTl1bgQ3j4/0.jpg)](http://www.youtube.com/watch?v=fJTl1bgQ3j4)
 
 ## Samples
-<a href="https://play.google.com/store/apps/details?id=com.tyorikan.voicerecordingvisualizer.sample"><img src="http://www.android.com/images/brand/get_it_on_play_logo_large.png"/></a>
+<a href="https://play.google.com/store/apps/details?id=com.tasssadar.voicerecordingvisualizer.sample"><img src="http://www.android.com/images/brand/get_it_on_play_logo_large.png"/></a>
 
 ## Gradle
 ```groovy

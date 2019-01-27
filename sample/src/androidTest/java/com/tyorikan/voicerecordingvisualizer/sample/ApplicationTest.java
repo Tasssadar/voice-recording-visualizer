@@ -1,4 +1,4 @@
-package com.tyorikan.voicerecordingvisualizer.sample;
+package com.tasssadar.voicerecordingvisualizer.sample;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

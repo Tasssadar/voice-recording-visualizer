@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package com.tyorikan.voicerecordingvisualizer;
+package com.tasssadar.voicerecordingvisualizer;
 
 import android.content.Context;
 import android.content.res.TypedArray;
